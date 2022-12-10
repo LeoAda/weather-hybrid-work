@@ -19,8 +19,7 @@ func (l Location) String() string {
 }
 
 type LocationResponse struct {
-	Locations      []Location `json:"results"`
-	GenerationTime float64    `json:"generationtime_ms"`
+	Locations []Location `json:"results"`
 }
 
 func SearchLocationsList(query string) []Location {
