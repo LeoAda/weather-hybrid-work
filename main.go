@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	fmt.Println("Hello, World!")
@@ -12,12 +14,16 @@ func main() {
 		config.Location = location
 		SaveConfig(config)
 	*/
-
 	config, _ := LoadConfig()
 	fmt.Println(config.Location)
 
 	// Get forecast
 	forecast := GetForecast(config.Location)
 	fmt.Println(forecast)
+
+	//schedule := AskDaySchedule()
+	//config.OutsideSchedule = schedule
+	//SaveConfig(config)
+	PrintSchedule(config.OutsideSchedule)
 
 }

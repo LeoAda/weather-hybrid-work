@@ -6,7 +6,8 @@ import (
 )
 
 type Config struct {
-	Location Location `json:"location"`
+	Location        Location          `json:"location"`
+	OutsideSchedule []OutsideSchedule `json:"outside_schedule"`
 }
 
 func SaveConfig(config Config) error {
