@@ -5,17 +5,19 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Forecast struct {
-	Time                string  `json:"time"`
+	Date                string  `json:"time"`
+	Hour                int     `json:"hour"`
 	Temperature         float64 `json:"temperature_2m"`
 	ApparentTemperature float64 `json:"apparent_temperature"`
 	Precipitation       float64 `json:"precipitation"`
 }
 
 func (f Forecast) String() string {
-	return fmt.Sprintf("Temperature: %f, Apparent Temperature: %f, Precipitation: %f, Time: %s", f.Temperature, f.ApparentTemperature, f.Precipitation, f.Time)
+	return fmt.Sprintf("%s %d:00: %.1f°C, %.1f°C, %.1fmm", f.Date, f.Hour, f.Temperature, f.ApparentTemperature, f.Precipitation)
 }
 
 type ForecastList struct {
@@ -29,8 +31,9 @@ type ForcastResponse struct {
 	ForecastList ForecastList `json:"hourly"`
 }
 
-func GetForecast(Location Location) []Forecast {
-	resp, err := http.Get(fmt.Sprintf("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&hourly=temperature_2m,apparent_temperature,precipitation", Location.Latitude, Location.Longitude))
+func GetWeekForecast(Location Location, StartDay time.Time) []Forecast {
+	EndTime := StartDay.AddDate(0, 0, 4)
+	resp, err := http.Get(fmt.Sprintf("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&hourly=temperature_2m,apparent_temperature,precipitation&start_date=%s&end_date=%s", Location.Latitude, Location.Longitude, StartDay.Format("2006-01-02"), EndTime.Format("2006-01-02")))
 	if err != nil {
 		return []Forecast{}
 	}
@@ -50,7 +53,8 @@ func (f ForecastList) ConvertToListOfForecast() []Forecast {
 	var forecast []Forecast
 	for i := range f.Time {
 		forecast = append(forecast, Forecast{
-			Time:                f.Time[i],
+			Date:                f.Time[i],
+			Hour:                i,
 			Temperature:         f.Temperature[i],
 			ApparentTemperature: f.ApparentTemperature[i],
 			Precipitation:       f.Precipitation[i],

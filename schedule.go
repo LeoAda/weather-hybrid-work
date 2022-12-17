@@ -3,46 +3,68 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"strings"
 )
 
 type OutsideSchedule struct {
-	StartTime string `json:"start_time"`
-	EndTime   string `json:"end_time"`
+	StartHour string `json:"start_hour"`
+	StartMin  string `json:"start_minute"`
+	EndHour   string `json:"end_hour"`
+	EndMin    string `json:"end_minute"`
 }
 
 func (s OutsideSchedule) String() string {
-	return fmt.Sprintf("Start time: %s, End time: %s", s.StartTime, s.EndTime)
+	return fmt.Sprintf("Start: %s:%s, End: %s:%s", s.StartHour, s.StartMin, s.EndHour, s.EndMin)
 }
 
 func AskDaySchedule() []OutsideSchedule {
 	var schedule []OutsideSchedule
+
 	for {
-		var start_time, end_time string
-		fmt.Println("Enter start time (hh:mm): ")
-		fmt.Scanln(&start_time)
-		if !CheckTimeFormat(start_time) {
-			fmt.Println("Invalid time format")
+		startTime, endTime, err := askForStartAndEndTimes()
+		if err != nil {
+			fmt.Println(err)
 			continue
 		}
-		fmt.Println("Enter end time (hh:mm): ")
-		fmt.Scanln(&end_time)
-		if !CheckTimeFormat(end_time) {
-			fmt.Println("Invalid time format")
-			continue
-		}
+
 		schedule = append(schedule, OutsideSchedule{
-			StartTime: start_time,
-			EndTime:   end_time,
+			StartHour: startTime[0],
+			StartMin:  startTime[1],
+			EndHour:   endTime[0],
+			EndMin:    endTime[1],
 		})
-		var more string
-		fmt.Println("More? (y/n): ")
-		fmt.Scanln(&more)
-		if more == "n" {
+
+		if !askForMore() {
 			break
 		}
 	}
 
 	return schedule
+}
+
+func askForStartAndEndTimes() ([]string, []string, error) {
+	var startTime, endTime string
+	fmt.Println("Enter start time (hh:mm): ")
+	fmt.Scanln(&startTime)
+	if !CheckTimeFormat(startTime) {
+		return nil, nil, fmt.Errorf("Invalid time format")
+	}
+	fmt.Println("Enter end time (hh:mm): ")
+	fmt.Scanln(&endTime)
+	if !CheckTimeFormat(endTime) {
+		return nil, nil, fmt.Errorf("Invalid time format")
+	}
+
+	startTimeList := strings.Split(startTime, ":")
+	endTimeList := strings.Split(endTime, ":")
+	return startTimeList, endTimeList, nil
+}
+
+func askForMore() bool {
+	var more string
+	fmt.Println("More? (y/n): ")
+	fmt.Scanln(&more)
+	return more == "y"
 }
 
 func CheckTimeFormat(time string) bool {

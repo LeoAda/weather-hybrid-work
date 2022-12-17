@@ -10,34 +10,38 @@ type Config struct {
 	OutsideSchedule []OutsideSchedule `json:"outside_schedule"`
 }
 
+const configFile = "config.json"
+
 func SaveConfig(config Config) error {
-	//Save config to config.json
-	file, err := os.Create("config.json") // creates if file doesn't exist
+	file, err := os.Create(configFile) // creates if file doesn't exist
 	if err != nil {
 		return err
 	}
+	defer file.Close()
+
 	data, err := json.MarshalIndent(config, "", " ") // Parse object to JSON
 	if err != nil {
 		return err
 	}
-	_, err = file.Write(data) // Write JSON to file
-	if err != nil {
+
+	if _, err := file.Write(data); err != nil { // Write JSON to file
 		return err
 	}
-	return nil
+	return file.Sync()
 }
 
 func LoadConfig() (Config, error) {
-	// Load config from config.json
-	file, err := os.Open("config.json")
+	file, err := os.Open(configFile)
 	if err != nil {
 		return Config{}, err
 	}
+	defer file.Close()
+
 	decoder := json.NewDecoder(file)
 	config := Config{}
-	err = decoder.Decode(&config)
-	if err != nil {
+	if err := decoder.Decode(&config); err != nil {
 		return Config{}, err
 	}
+
 	return config, nil
 }

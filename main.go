@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -17,13 +18,17 @@ func main() {
 	config, _ := LoadConfig()
 	fmt.Println(config.Location)
 
-	// Get forecast
-	forecast := GetForecast(config.Location)
-	fmt.Println(forecast)
-
-	//schedule := AskDaySchedule()
-	//config.OutsideSchedule = schedule
-	//SaveConfig(config)
+	schedule := AskDaySchedule()
+	config.OutsideSchedule = schedule
+	SaveConfig(config)
 	PrintSchedule(config.OutsideSchedule)
+
+	// Get forecast
+	now := time.Now()
+	fmt.Println(now)
+	fmt.Println(GetNearestMonday(now))
+	monday := GetNearestMonday(now)
+	forecast := GetWeekForecast(config.Location, monday)
+	fmt.Println(forecast)
 
 }
