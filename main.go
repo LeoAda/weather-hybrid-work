@@ -18,17 +18,17 @@ func main() {
 	config, _ := LoadConfig()
 	fmt.Println(config.Location)
 
-	schedule := AskDaySchedule()
-	config.OutsideSchedule = schedule
-	SaveConfig(config)
-	PrintSchedule(config.OutsideSchedule)
+	//schedule := AskDaySchedule()
+	//config.OutsideSchedule = schedule
+	//SaveConfig(config)
+	fmt.Println(config.OutsideSchedule)
 
 	// Get forecast
 	now := time.Now()
-	fmt.Println(now)
-	fmt.Println(GetNearestMonday(now))
 	monday := GetNearestMonday(now)
 	forecast := GetWeekForecast(config.Location, monday)
 	fmt.Println(forecast)
+
+	fmt.Println(GenerateWeekRanks(forecast, config.OutsideSchedule))
 
 }

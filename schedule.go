@@ -3,18 +3,19 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 type OutsideSchedule struct {
-	StartHour string `json:"start_hour"`
-	StartMin  string `json:"start_minute"`
-	EndHour   string `json:"end_hour"`
-	EndMin    string `json:"end_minute"`
+	StartHour int `json:"start_hour"`
+	StartMin  int `json:"start_minute"`
+	EndHour   int `json:"end_hour"`
+	EndMin    int `json:"end_minute"`
 }
 
 func (s OutsideSchedule) String() string {
-	return fmt.Sprintf("Start: %s:%s, End: %s:%s", s.StartHour, s.StartMin, s.EndHour, s.EndMin)
+	return fmt.Sprintf("%02d:%02d - %02d:%02d", s.StartHour, s.StartMin, s.EndHour, s.EndMin)
 }
 
 func AskDaySchedule() []OutsideSchedule {
@@ -26,12 +27,15 @@ func AskDaySchedule() []OutsideSchedule {
 			fmt.Println(err)
 			continue
 		}
-
+		StartHour, _ := strconv.Atoi(startTime[0])
+		StartMin, _ := strconv.Atoi(startTime[1])
+		EndHour, _ := strconv.Atoi(endTime[0])
+		EndMin, _ := strconv.Atoi(endTime[1])
 		schedule = append(schedule, OutsideSchedule{
-			StartHour: startTime[0],
-			StartMin:  startTime[1],
-			EndHour:   endTime[0],
-			EndMin:    endTime[1],
+			StartHour: StartHour,
+			StartMin:  StartMin,
+			EndHour:   EndHour,
+			EndMin:    EndMin,
 		})
 
 		if !askForMore() {
