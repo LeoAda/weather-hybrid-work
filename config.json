@@ -12,6 +12,12 @@
    "start_minute": 0,
    "end_hour": 10,
    "end_minute": 0
+  },
+  {
+   "start_hour": 18,
+   "start_minute": 30,
+   "end_hour": 19,
+   "end_minute": 45
   }
  ]
 }

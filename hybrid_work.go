@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -34,23 +33,18 @@ func GenerateWeekRanks(forecast []Forecast, outsideSchedule []OutsideSchedule) [
 			for j := range forecast {
 				forecastDate, _ := time.Parse("2006-01-02T15:04", string(forecast[j].Date))
 				if weekDate.Day() == forecastDate.Day() {
-					fmt.Println(forecast[j])
-					if forecast[j].Hour == outsideSchedule[k].StartHour && forecast[j].Hour == outsideSchedule[k].EndHour {
-						//same hour
+					if forecast[j].Hour >= outsideSchedule[k].StartHour && forecast[j].Hour <= outsideSchedule[k].EndHour {
 						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
-						week[i].PrecipitationTotal += forecast[j].Precipitation * float64(60/(outsideSchedule[k].EndMin-outsideSchedule[k].StartMin))
-					} else if forecast[j].Hour == outsideSchedule[k].StartHour && forecast[j].Hour != outsideSchedule[k].EndHour {
-						//start hour
-						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
-						week[i].PrecipitationTotal += forecast[j].Precipitation * float64(outsideSchedule[k].StartMin)
-					} else if forecast[j].Hour != outsideSchedule[k].StartHour && forecast[j].Hour == outsideSchedule[k].EndHour {
-						//end hour
-						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
-						week[i].PrecipitationTotal += forecast[j].Precipitation * float64(outsideSchedule[k].EndMin)
-					} else if forecast[j].Hour > outsideSchedule[k].StartHour && forecast[j].Hour < outsideSchedule[k].EndHour {
-						//middle hours
-						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
-						week[i].PrecipitationTotal += forecast[j].Precipitation
+						if forecast[j].Hour == outsideSchedule[k].StartHour {
+							// If the forecast hour is the start hour, calculate the precipitation total based on the start minute
+							week[i].PrecipitationTotal += forecast[j].Precipitation * float64((60-outsideSchedule[k].StartMin)/60)
+						} else if forecast[j].Hour == outsideSchedule[k].EndHour {
+							// If the forecast hour is the end hour, calculate the precipitation total based on the end minute
+							week[i].PrecipitationTotal += forecast[j].Precipitation * float64(outsideSchedule[k].EndMin/60)
+						} else {
+							// If the forecast hour is within the middle hours, add the full precipitation value
+							week[i].PrecipitationTotal += forecast[j].Precipitation
+						}
 					}
 
 				}
