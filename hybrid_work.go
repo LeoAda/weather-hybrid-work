@@ -30,27 +30,34 @@ func GenerateWeekRanks(forecast []Forecast, outsideSchedule []OutsideSchedule) [
 	}
 	for i := range week {
 		weekDate, _ := time.Parse("2006-01-02", string(week[i].Day))
-		for j := range forecast {
-			forecastDate, _ := time.Parse("2006-01-02T15:04", string(forecast[j].Date))
-			if weekDate.Day() == forecastDate.Day() {
-				for k := range outsideSchedule {
-					if forecast[j].Hour == outsideSchedule[k].StartHour || forecast[j].Hour == outsideSchedule[k].EndHour {
-						fmt.Println(forecast[j])
+		for k := range outsideSchedule {
+			for j := range forecast {
+				forecastDate, _ := time.Parse("2006-01-02T15:04", string(forecast[j].Date))
+				if weekDate.Day() == forecastDate.Day() {
+					fmt.Println(forecast[j])
+					if forecast[j].Hour == outsideSchedule[k].StartHour && forecast[j].Hour == outsideSchedule[k].EndHour {
+						//same hour
 						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
-						if outsideSchedule[k].StartHour == outsideSchedule[k].EndHour {
-							week[i].PrecipitationTotal += forecast[j].Precipitation * float64(60/(outsideSchedule[k].EndMin-outsideSchedule[k].StartMin))
-						} else {
-							if forecast[j].Hour == outsideSchedule[k].StartHour && outsideSchedule[k].StartMin != 0 {
-								week[i].PrecipitationTotal += forecast[j].Precipitation * float64(60-outsideSchedule[k].StartMin)
-							} else if forecast[j].Hour == outsideSchedule[k].EndHour && outsideSchedule[k].EndMin != 0 {
-								week[i].PrecipitationTotal += forecast[j].Precipitation * float64(outsideSchedule[k].EndMin)
-							}
-						}
-
+						week[i].PrecipitationTotal += forecast[j].Precipitation * float64(60/(outsideSchedule[k].EndMin-outsideSchedule[k].StartMin))
+					} else if forecast[j].Hour == outsideSchedule[k].StartHour && forecast[j].Hour != outsideSchedule[k].EndHour {
+						//start hour
+						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
+						week[i].PrecipitationTotal += forecast[j].Precipitation * float64(outsideSchedule[k].StartMin)
+					} else if forecast[j].Hour != outsideSchedule[k].StartHour && forecast[j].Hour == outsideSchedule[k].EndHour {
+						//end hour
+						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
+						week[i].PrecipitationTotal += forecast[j].Precipitation * float64(outsideSchedule[k].EndMin)
+					} else if forecast[j].Hour > outsideSchedule[k].StartHour && forecast[j].Hour < outsideSchedule[k].EndHour {
+						//middle hours
+						week[i].ApparentTemperatureMean += forecast[j].ApparentTemperature
+						week[i].PrecipitationTotal += forecast[j].Precipitation
 					}
+
 				}
 
 			}
+			//Calculate average temperature
+			week[i].ApparentTemperatureMean = week[i].ApparentTemperatureMean / float64(outsideSchedule[k].EndHour-outsideSchedule[k].StartHour+1)
 		}
 	}
 	return week
