@@ -18,11 +18,11 @@ func (s OutsideSchedule) String() string {
 	return fmt.Sprintf("%02d:%02d - %02d:%02d", s.StartHour, s.StartMin, s.EndHour, s.EndMin)
 }
 
-func AskDaySchedule() []OutsideSchedule {
+func AskDaySchedule() ([]OutsideSchedule, error) {
 	var schedule []OutsideSchedule
 
 	for {
-		startTime, endTime, err := askStartAndEndTimes()
+		startTime, endTime, err := askTimes()
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -30,26 +30,22 @@ func AskDaySchedule() []OutsideSchedule {
 
 		startHour, err := strconv.Atoi(startTime[0])
 		if err != nil {
-			fmt.Println(err)
-			continue
+			return nil, fmt.Errorf("Invalid time format for start hour : %v", err)
 		}
 
 		startMin, err := strconv.Atoi(startTime[1])
 		if err != nil {
-			fmt.Println(err)
-			continue
+			return nil, fmt.Errorf("Invalid time format for start minute : %v", err)
 		}
 
 		endHour, err := strconv.Atoi(endTime[0])
 		if err != nil {
-			fmt.Println(err)
-			continue
+			return nil, fmt.Errorf("Invalid time format for end hour : %v", err)
 		}
 
 		endMin, err := strconv.Atoi(endTime[1])
 		if err != nil {
-			fmt.Println(err)
-			continue
+			return nil, fmt.Errorf("Invalid time format for end minute : %v", err)
 		}
 
 		schedule = append(schedule, OutsideSchedule{
@@ -64,10 +60,10 @@ func AskDaySchedule() []OutsideSchedule {
 		}
 	}
 
-	return schedule
+	return schedule, nil
 }
 
-func askStartAndEndTimes() ([]string, []string, error) {
+func askTimes() ([]string, []string, error) {
 	var startTime, endTime string
 	fmt.Println("Enter start time (hh:mm): ")
 	fmt.Scanln(&startTime)

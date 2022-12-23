@@ -1,23 +1,17 @@
 {
  "location": {
-  "name": "",
-  "country": "",
-  "latitude": 0,
-  "longitude": 0,
-  "admin1": ""
+  "name": "Lille",
+  "country": "France",
+  "latitude": 50.63297,
+  "longitude": 3.05858,
+  "admin1": "Hauts-de-France"
  },
  "outside_schedule": [
   {
    "start_hour": 8,
-   "start_minute": 20,
+   "start_minute": 30,
    "end_hour": 9,
-   "end_minute": 25
-  },
-  {
-   "start_hour": 17,
-   "start_minute": 0,
-   "end_hour": 18,
-   "end_minute": 0
+   "end_minute": 30
   }
  ]
 }

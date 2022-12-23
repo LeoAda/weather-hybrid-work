@@ -15,10 +15,14 @@
 
 **TODO**
 ---
+* Add exit to asktime
+* Add next or current week
+
+
 Refactor :
 [x] Location
 [x] Config
-[] Schedule
+[X] Schedule
 [] Weather
 [] Hybrid work
 [] Main
