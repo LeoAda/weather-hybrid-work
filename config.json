@@ -1,23 +1,23 @@
 {
  "location": {
-  "name": "Croix",
-  "country": "France",
-  "latitude": 50.67846,
-  "longitude": 3.1493,
-  "admin1": "Hauts-de-France"
+  "name": "",
+  "country": "",
+  "latitude": 0,
+  "longitude": 0,
+  "admin1": ""
  },
  "outside_schedule": [
   {
-   "start_hour": 9,
-   "start_minute": 0,
-   "end_hour": 10,
-   "end_minute": 0
+   "start_hour": 8,
+   "start_minute": 20,
+   "end_hour": 9,
+   "end_minute": 25
   },
   {
-   "start_hour": 18,
-   "start_minute": 30,
-   "end_hour": 19,
-   "end_minute": 45
+   "start_hour": 17,
+   "start_minute": 0,
+   "end_hour": 18,
+   "end_minute": 0
   }
  ]
 }

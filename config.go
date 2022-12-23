@@ -12,7 +12,7 @@ type Config struct {
 
 const configFile = "config.json"
 
-func SaveConfig(config Config) error {
+func (config Config) Save() error {
 	file, err := os.Create(configFile) // creates if file doesn't exist
 	if err != nil {
 		return err
@@ -42,6 +42,5 @@ func LoadConfig() (Config, error) {
 	if err := decoder.Decode(&config); err != nil {
 		return Config{}, err
 	}
-
 	return config, nil
 }

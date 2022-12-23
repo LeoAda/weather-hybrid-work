@@ -22,20 +22,41 @@ func AskDaySchedule() []OutsideSchedule {
 	var schedule []OutsideSchedule
 
 	for {
-		startTime, endTime, err := askForStartAndEndTimes()
+		startTime, endTime, err := askStartAndEndTimes()
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
-		StartHour, _ := strconv.Atoi(startTime[0])
-		StartMin, _ := strconv.Atoi(startTime[1])
-		EndHour, _ := strconv.Atoi(endTime[0])
-		EndMin, _ := strconv.Atoi(endTime[1])
+
+		startHour, err := strconv.Atoi(startTime[0])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		startMin, err := strconv.Atoi(startTime[1])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		endHour, err := strconv.Atoi(endTime[0])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		endMin, err := strconv.Atoi(endTime[1])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
 		schedule = append(schedule, OutsideSchedule{
-			StartHour: StartHour,
-			StartMin:  StartMin,
-			EndHour:   EndHour,
-			EndMin:    EndMin,
+			StartHour: startHour,
+			StartMin:  startMin,
+			EndHour:   endHour,
+			EndMin:    endMin,
 		})
 
 		if !askForMore() {
@@ -46,16 +67,16 @@ func AskDaySchedule() []OutsideSchedule {
 	return schedule
 }
 
-func askForStartAndEndTimes() ([]string, []string, error) {
+func askStartAndEndTimes() ([]string, []string, error) {
 	var startTime, endTime string
 	fmt.Println("Enter start time (hh:mm): ")
 	fmt.Scanln(&startTime)
-	if !CheckTimeFormat(startTime) {
+	if !checkTimeFormat(startTime) {
 		return nil, nil, fmt.Errorf("Invalid time format")
 	}
 	fmt.Println("Enter end time (hh:mm): ")
 	fmt.Scanln(&endTime)
-	if !CheckTimeFormat(endTime) {
+	if !checkTimeFormat(endTime) {
 		return nil, nil, fmt.Errorf("Invalid time format")
 	}
 
@@ -71,7 +92,7 @@ func askForMore() bool {
 	return more == "y"
 }
 
-func CheckTimeFormat(time string) bool {
+func checkTimeFormat(time string) bool {
 	// check if time in format hh:mm with regex
 	r, _ := regexp.Compile("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")
 	return r.MatchString(time)

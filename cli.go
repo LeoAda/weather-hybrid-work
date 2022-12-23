@@ -2,17 +2,12 @@ package main
 
 import "fmt"
 
-func ChooseLocation() Location {
-	//Display locations and ask user to choose one, return the chosen location
-	var s string
-	fmt.Print("Type city name: ")
-	fmt.Scan(&s)
-	locations := SearchLocationsList(s)
-	for index, element := range locations {
-		fmt.Println(index, ". ", element)
+func LocationMenu(config Config) error {
+	location, err := ChooseLocation()
+	if err != nil {
+		return fmt.Errorf("Error choosing location: %v", err)
+	} else {
+		config.Location = location
+		return config.Save()
 	}
-	var i int
-	fmt.Print("Choose a location: ")
-	fmt.Scan(&i)
-	return locations[i]
 }

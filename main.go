@@ -7,21 +7,15 @@ import (
 
 // https://github.com/Pungyeon/clean-go-article
 func main() {
-	fmt.Println("Hello, World!")
-	/*
-		config := Config{}
-		SaveConfig(config)
-		location := ChooseLocation()
-		fmt.Println(location)
-		config.Location = location
-		SaveConfig(config)
-	*/
+	fmt.Println("Welcome to the weather hybrid work app")
 	config, _ := LoadConfig()
+
+	//Menu(config)
 	fmt.Println(config.Location)
 
-	//schedule := AskDaySchedule()
-	//config.OutsideSchedule = schedule
-	//SaveConfig(config)
+	schedule := AskDaySchedule()
+	config.OutsideSchedule = schedule
+	config.Save()
 	fmt.Println(config.OutsideSchedule)
 
 	// Get forecast
@@ -42,8 +36,9 @@ func main() {
 
 }
 
-func Menu() {
+func Menu(config Config) {
 	var s string
+	var err error
 	fmt.Println("1. Choose location")
 	fmt.Println("2. Choose schedule")
 	fmt.Println("3. Get forecast")
@@ -51,7 +46,7 @@ func Menu() {
 	fmt.Scan(&s)
 	switch s {
 	case "1":
-		//ChooseLocation()
+		err = LocationMenu(config)
 	case "2":
 		//AskDaySchedule()
 	case "3":
@@ -60,5 +55,8 @@ func Menu() {
 		//Exit()
 	default:
 		fmt.Println("Invalid input")
+	}
+	if err != nil {
+		fmt.Println(err)
 	}
 }
