@@ -51,12 +51,12 @@ func GetWeekForecast(Location Location, StartDay time.Time) []Forecast {
 }
 func (f ForecastList) ConvertToListOfForecast() []Forecast {
 	var forecast []Forecast
+
 	for i := range f.Time {
-		hour, err := time.Parse("2006-02-15T15:04", f.Time[i])
+		hour, err := time.Parse("2006-01-02T15:04", f.Time[i])
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(hour)
 		forecast = append(forecast, Forecast{
 			Date:                f.Time[i],
 			Hour:                hour.Hour(),
