@@ -13,7 +13,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	Menu(&config)
+	//Menu(&config)
 
 	fmt.Println(config.Location)
 	fmt.Println(config.OutsideSchedule)
@@ -22,7 +22,7 @@ func main() {
 	monday := GetNearestMonday(now)
 	fmt.Println("Forecast for week of monday ", monday.Format("2006-01-02"))
 	forecast := GetWeekForecast(config.Location, monday)
-	//fmt.Println(forecast)
+	fmt.Println(forecast)
 
 	weekForecast := GenerateWeekForecast(forecast, config.OutsideSchedule)
 	fmt.Println(weekForecast)

@@ -17,7 +17,7 @@
 ---
 * Add exit to asktime
 * Add next or current week
-
+* 
 
 Refactor :
 [x] Location
