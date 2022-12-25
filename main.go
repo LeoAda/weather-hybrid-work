@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 // https://github.com/Pungyeon/clean-go-article
@@ -13,25 +12,10 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	//Menu(&config)
+	Menu(&config)
 
 	fmt.Println(config.Location)
 	fmt.Println(config.OutsideSchedule)
-
-	now := time.Now()
-	monday := GetNearestMonday(now)
-	fmt.Println("Forecast for week of monday ", monday.Format("2006-01-02"))
-	forecast := GetWeekForecast(config.Location, monday)
-	fmt.Println(forecast)
-
-	weekForecast := GenerateWeekForecast(forecast, config.OutsideSchedule)
-	fmt.Println(weekForecast)
-
-	rank := GenerateRankDays(weekForecast)
-	fmt.Println(rank)
-
-	rank = SortDaysByOverallRank(rank)
-	fmt.Println(rank)
 
 }
 
@@ -50,7 +34,7 @@ func Menu(config *Config) {
 		case "2":
 			err = ScheduleMenu(config)
 		case "3":
-			//GetForecast()
+			err = ForecastMenu(config)
 		case "4":
 			//Exit()
 			exitFlag = true

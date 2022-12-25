@@ -31,9 +31,8 @@ type ForcastResponse struct {
 	ForecastList ForecastList `json:"hourly"`
 }
 
-func GetWeekForecast(Location Location, StartDay time.Time) []Forecast {
-	EndTime := StartDay.AddDate(0, 0, 4)
-	resp, err := http.Get(fmt.Sprintf("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&hourly=temperature_2m,apparent_temperature,precipitation&start_date=%s&end_date=%s", Location.Latitude, Location.Longitude, StartDay.Format("2006-01-02"), EndTime.Format("2006-01-02")))
+func GetWeekForecast(Location Location, StartDay time.Time, EndDay time.Time) []Forecast {
+	resp, err := http.Get(fmt.Sprintf("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&hourly=temperature_2m,apparent_temperature,precipitation&start_date=%s&end_date=%s", Location.Latitude, Location.Longitude, StartDay.Format("2006-01-02"), EndDay.Format("2006-01-02")))
 	if err != nil {
 		return []Forecast{}
 	}
