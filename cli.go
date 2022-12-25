@@ -6,7 +6,9 @@ import (
 )
 
 func LocationMenu(config *Config) error {
+	Separator()
 	location, err := ChooseLocation()
+	Separator()
 	if err != nil {
 		return fmt.Errorf("Error choosing location: %v", err)
 	} else {
@@ -16,7 +18,9 @@ func LocationMenu(config *Config) error {
 }
 
 func ScheduleMenu(config *Config) error {
+	Separator()
 	schedule, err := AskDaySchedule()
+	Separator()
 	if err != nil {
 		return fmt.Errorf("Error choosing schedule: %v", err)
 	} else {
@@ -29,6 +33,7 @@ func ForecastMenu(config *Config) error {
 	now := time.Now()
 	monday := GetNearestMonday(now)
 	//choose current week or next week
+	Separator()
 	fmt.Println("1. Current week")
 	fmt.Println("2. Next week")
 	var s string
@@ -44,13 +49,16 @@ func ForecastMenu(config *Config) error {
 	fmt.Println("Forecast for week of monday ", monday.Format("2006-01-02"))
 	friday := monday.AddDate(0, 0, 4)
 	forecast := GetWeekForecast(config.Location, monday, friday)
-	fmt.Println(forecast)
 
 	weekForecast := GenerateWeekForecast(forecast, config.OutsideSchedule)
 	fmt.Println(weekForecast)
-
+	Separator()
 	rank := SortDaysByOverallRank(GenerateRankDays(weekForecast))
-	fmt.Println(rank)
-
+	fmt.Println("Recommended days to work at home : ")
+	PrintDayRank(rank)
+	Separator()
 	return nil
+}
+func Separator() {
+	fmt.Println("------------------------------------------------------------")
 }

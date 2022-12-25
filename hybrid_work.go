@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -17,6 +19,19 @@ type DayForecastOutside struct {
 	PrecipitationTotal      []float64
 }
 
+func (d DayForecastOutside) String() string {
+	return fmt.Sprintf("Day: %v\nApparent Temperature Mean: %v Precipitation Total: %v\n", d.Day, d.ApparentTemperatureMean, d.PrecipitationTotal)
+}
+
+func (d DayRank) String() string {
+	day := strings.TrimSpace(d.Day)
+	return fmt.Sprintf("%v, Overall Rank: %v", day, d.OverallRank)
+}
+func PrintDayRank(days []DayRank) {
+	for i, day := range days {
+		fmt.Printf("%d. %s\n", i+1, day)
+	}
+}
 func SortDaysByOverallRank(days []DayRank) []DayRank {
 	// Use the sort package's Slice function to sort the slice of DayRank structs
 	sort.Slice(days, func(i, j int) bool {

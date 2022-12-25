@@ -16,14 +16,10 @@
 **TODO**
 ---
 * Add exit to asktime
-* Add next or current week
-* 
+* Generalise ask methode
+* Graph library ?
 
 Refactor :
-[x] Location
-[x] Config
-[X] Schedule
-[] Weather
-[] Hybrid work
-[] Main
-[] Cli
+[] Weather ?
+[] Hybrid work review the rank
+[] Main => error handling
