@@ -22,12 +22,6 @@ func (d DayForecastOutside) String() string {
 	return fmt.Sprintf("Day: %v\nApparent Temperature Mean: %v Precipitation Total: %v\n", d.Day, d.ApparentTemperatureMean, d.PrecipitationTotal)
 }
 
-/*
-	func (d DayRank) String() string {
-		day := strings.TrimSpace(d.Day)
-		return fmt.Sprintf("%v, Overall Rank: %v", day, d.OverallRank)
-	}
-*/
 func (d DayRank) String() string {
 	return fmt.Sprintf("Day: %v\nApparent Temperature Rank: %v Precipitation Rank: %v\n", d.Day, d.ApparentTemperatureRank, d.PrecipitationRank)
 }

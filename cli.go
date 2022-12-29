@@ -46,12 +46,12 @@ func ForecastMenu(config *Config) error {
 	default:
 		return fmt.Errorf("Invalid input")
 	}
+	Separator()
 	fmt.Println("Forecast for week of monday ", monday.Format("2006-01-02"))
 	friday := monday.AddDate(0, 0, 4)
 	forecast := GetWeekForecast(config.Location, monday, friday)
 
 	weekForecast := GenerateWeekForecast(forecast, config.OutsideSchedule)
-	fmt.Println(weekForecast)
 	Separator()
 	rank := SortDaysByOverallRank(GenerateRankDays(weekForecast))
 	fmt.Println("Recommended days to work at home : ")
