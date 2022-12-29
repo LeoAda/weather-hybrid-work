@@ -16,13 +16,14 @@ Run the executable
 1. Enter a city name and select the one corresponding in the list
 2. Enter your schedule for when you are outside 
 3. Select the forecast for the current week or the next one and the prediction appear with ranking where 1 is the best day to work at home
+
 **Language**
 ---
 Go 1.19
 
 **Api used**
 ---
-[Open Meteo geocoding](https://open-meteo.com/en/docs/geocoding-api)
+[Open Meteo geocoding](https://open-meteo.com/en/docs/geocoding-api)\
 [Open Meteo forecast](https://open-meteo.com/)
 
 **TODO**
