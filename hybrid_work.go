@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 	"sort"
-	"strings"
 	"time"
 )
 
 type DayRank struct {
 	Day                     string
-	ApparentTemperatureRank int
-	PrecipitationRank       int
+	ApparentTemperatureRank []int
+	PrecipitationRank       []int
 	OverallRank             int
 }
 type DayForecastOutside struct {
@@ -23,9 +22,14 @@ func (d DayForecastOutside) String() string {
 	return fmt.Sprintf("Day: %v\nApparent Temperature Mean: %v Precipitation Total: %v\n", d.Day, d.ApparentTemperatureMean, d.PrecipitationTotal)
 }
 
+/*
+	func (d DayRank) String() string {
+		day := strings.TrimSpace(d.Day)
+		return fmt.Sprintf("%v, Overall Rank: %v", day, d.OverallRank)
+	}
+*/
 func (d DayRank) String() string {
-	day := strings.TrimSpace(d.Day)
-	return fmt.Sprintf("%v, Overall Rank: %v", day, d.OverallRank)
+	return fmt.Sprintf("Day: %v\nApparent Temperature Rank: %v Precipitation Rank: %v\n", d.Day, d.ApparentTemperatureRank, d.PrecipitationRank)
 }
 func PrintDayRank(days []DayRank) {
 	for i, day := range days {
@@ -44,62 +48,55 @@ func SortDaysByOverallRank(days []DayRank) []DayRank {
 func GenerateRankDays(forecasts [5]DayForecastOutside) []DayRank {
 	// Create a slice to store the ranks
 	ranks := make([]DayRank, len(forecasts))
-
 	// Iterate through the forecasts
 	for i, forecast := range forecasts {
-		// Calculate the mean apparent temperature and total precipitation for the day
-		meanTemp := mean(forecast.ApparentTemperatureMean)
-		totalPrecip := sum(forecast.PrecipitationTotal)
-
 		// Initialize the rank for the day
+		//small temperature rank = cold day
+		//small precipitation rank = rainy day
 		rank := DayRank{
 			Day:                     forecast.Day,
-			ApparentTemperatureRank: 1,
-			PrecipitationRank:       len(forecasts),
+			ApparentTemperatureRank: make([]int, len(forecast.ApparentTemperatureMean)),
+			PrecipitationRank:       make([]int, len(forecast.PrecipitationTotal)),
 		}
 
-		// Compare the mean temperature and total precipitation to those of the other days
-		// to determine the ranks for each day
+		// Iterate through other forecasts to compare the current forecast to
 		for j, otherForecast := range forecasts {
+			// Skip the current forecast
 			if i == j {
 				continue
 			}
-			otherMeanTemp := mean(otherForecast.ApparentTemperatureMean)
-			otherTotalPrecip := sum(otherForecast.PrecipitationTotal)
 
-			if meanTemp > otherMeanTemp {
-				rank.ApparentTemperatureRank++
+			// Iterate through the outside schedules
+			for k := range forecast.ApparentTemperatureMean {
+				// If the current forecast's apparent temperature is less than the other forecast's apparent temperature, increment the rank
+				if forecast.ApparentTemperatureMean[k] > otherForecast.ApparentTemperatureMean[k] {
+					rank.ApparentTemperatureRank[k]++
+				}
 			}
-			if totalPrecip < otherTotalPrecip {
-				rank.PrecipitationRank--
+
+			// Iterate through the outside schedules
+			for k := range forecast.PrecipitationTotal {
+				// If the current forecast's precipitation is less than the other forecast's precipitation, increment the rank
+				if forecast.PrecipitationTotal[k] < otherForecast.PrecipitationTotal[k] {
+					rank.PrecipitationRank[k]++
+				}
 			}
 		}
-
-		rank.OverallRank = rank.ApparentTemperatureRank + (rank.PrecipitationRank * 2)
-
 		// Add the rank for the day to the slice
 		ranks[i] = rank
 	}
-
+	// Calculate the overall rank for each day
+	for i := range ranks {
+		// Iterate through the outside schedules
+		for j := range ranks[i].ApparentTemperatureRank {
+			// Add the apparent temperature rank and precipitation rank for the outside schedule
+			ranks[i].OverallRank += ranks[i].ApparentTemperatureRank[j] + ranks[i].PrecipitationRank[j]
+		}
+	}
+	// Sort the days by overall rank
+	ranks = SortDaysByOverallRank(ranks)
+	// Return the ranks
 	return ranks
-}
-
-// Helper function to calculate the mean of a slice of floats
-func mean(nums []float64) float64 {
-	total := 0.0
-	for _, num := range nums {
-		total += num
-	}
-	return total / float64(len(nums))
-}
-
-// Helper function to sum a slice of floats
-func sum(nums []float64) float64 {
-	total := 0.0
-	for _, num := range nums {
-		total += num
-	}
-	return total
 }
 
 func GenerateWeekForecast(forecast []Forecast, outsideSchedule []OutsideSchedule) [5]DayForecastOutside {
